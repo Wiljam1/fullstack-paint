@@ -5,10 +5,10 @@ const mysql = require('mysql2');
 const cors = require('cors');
 
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'wiljamniklas',
-  database: 'images',
+    host: process.env.DB_HOST || 'host.docker.internal',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'wiljamniklas',
+    database: process.env.DB_NAME || 'images',
 });
 
 const app = express();
@@ -32,6 +32,28 @@ app.post('/upload', upload.single('image'), async (req, res) => {
   }
 });
 
+app.post('/saveMergedImage', async (req, res) => {
+  const { imageData, id } = req.body;
+
+  try {
+    // Process the merged image data as needed, e.g., save it to the database
+    await createTableIfNotExists();
+
+    const mergedImageBuffer = Buffer.from(imageData.replace(/^data:image\/\w+;base64,/, ''), 'base64');
+
+    // If an ID is provided, update the existing image; otherwise, insert a new one
+    if (id) {
+      await updateImageInDatabase(id, mergedImageBuffer);
+    } else {
+      await saveImageToDatabase(mergedImageBuffer);
+    }
+    res.json({ message: 'Merged image saved successfully!' });
+  } catch (error) {
+    console.error('Error saving merged image to the database:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/images', async (req, res) => {
   const query = 'SELECT * FROM images.image_data';
 
@@ -43,9 +65,9 @@ app.get('/images', async (req, res) => {
           res.status(500).json({ error: 'Internal server error' });
         }
       } else {
-        const images = rows.map(row => ({ data: row.data.toString('base64') }));
-        res.setHeader('Content-Type', 'application/json');
-        res.json(images);
+        const images = rows.map(row => ({ id: row.id, data: row.data.toString('base64') }));
+          res.setHeader('Content-Type', 'application/json');
+          res.json(images);
       }
     });
   } catch (error) {
@@ -69,7 +91,7 @@ app.get('/images/:id', async (req, res) => {
               if (rows.length === 0) {
                   res.status(404).json({ error: 'Image not found' });
               } else {
-                  const image = { data: rows[0].data.toString('base64') };
+                  const image = {id: rows[0].id, data: rows[0].data.toString('base64') };
                   res.setHeader('Content-Type', 'application/json');
                   res.json(image);
               }
@@ -88,7 +110,6 @@ async function processImage(buffer) {
   return processedImageBuffer;
 }
 
-// Create the 'image_data' table if it doesn't exist
 async function createTableIfNotExists() {
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS image_data (
@@ -99,20 +120,29 @@ async function createTableIfNotExists() {
   await connection.execute(createTableQuery);
 }
 
-// Save image data to the database
+async function updateImageInDatabase(id, imageBuffer) {
+  try {
+    const updateQuery = 'UPDATE image_data SET data = ? WHERE id = ?';
+    await connection.execute(updateQuery, [imageBuffer, id]);
+
+    console.log('Image data updated in the database');
+  } catch (error) {
+    console.error('Error updating image data in the database:', error);
+    throw error;
+  }
+}
+
 async function saveImageToDatabase(imageBuffer) {
   try {
-    // Create the table if it doesn't exist
     await createTableIfNotExists();
 
-    // Insert the image data into the 'image_data' table
     const insertQuery = 'INSERT INTO image_data (data) VALUES (?)';
     await connection.execute(insertQuery, [imageBuffer]);
 
     console.log('Image data saved to the database');
   } catch (error) {
     console.error('Error saving image data to the database:', error);
-    throw error; // Rethrow the error for higher-level handling
+    throw error;
   }
 }
 
