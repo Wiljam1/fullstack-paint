@@ -17,4 +17,4 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: ${{ secrets.DOCKER_TAG }}
+        tags: ${{ registry.cloud.cbh.kth.se/deploy-a78aedc2-6b67-4c2c-95aa-abdd5901e6bb/images }}
