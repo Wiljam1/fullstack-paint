@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'  # Specify the desired Node.js version
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -24,5 +29,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
+          dockerfile: Dockerfile
           tags: |
             registry.cloud.cbh.kth.se/deploy-a78aedc2-6b67-4c2c-95aa-abdd5901e6bb/images:latest
