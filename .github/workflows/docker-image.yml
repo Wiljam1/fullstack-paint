@@ -18,4 +18,4 @@ jobs:
       with:
         push: true
         tags: ${{ secrets.DOCKER_TAG }}
-        dockerfile: C:\Users\Niklas\Documents\GitHub\fullstack-paint\image-service\Dockerfile
+        dockerfile: Dockerfile
