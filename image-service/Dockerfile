@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG NODE_VERSION=20.10.0
+ARG NODE_VERSION=20.9.0
 
 FROM node:${NODE_VERSION}-alpine
 
@@ -16,6 +16,9 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 USER root
 
 COPY . .
+COPY package.json .
+COPY --from=deps /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/ ./
 
 EXPOSE 3001
 
