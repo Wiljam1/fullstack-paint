@@ -10,7 +10,7 @@
 services:
   server:
     build:
-      context: .
+      context: image-service
     environment:
       NODE_ENV: production
     ports:
