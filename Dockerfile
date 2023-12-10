@@ -5,8 +5,12 @@ FROM node:${NODE_VERSION}-alpine
 ENV NODE_ENV production
 WORKDIR /usr/src/app
 
+COPY package*.json ./
+RUN npm install
 USER root
 COPY . .
 
 EXPOSE 3001
-CMD node server.js
+CMD ["node", "server.js"]
+
+#CMD ["npm", "start"]
