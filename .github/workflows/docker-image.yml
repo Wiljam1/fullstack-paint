@@ -12,7 +12,7 @@ jobs:
       with:
         repository: Wiljam1/fullstack-paint
         ref: main
-        fetch-depth: 0
+        fetch-depth: 1
     - name: Fetch Latest Changes
       run: git fetch --depth=1 origin main
     - name: Fetch Latest Changes
