@@ -1,20 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: image
+  name: images
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: image
+      app: images
   template:
     metadata:
       labels:
-        app: image
+        app: images
     spec:
       containers:
-        - name: image
-          image: wiljam/image:latest
-          ports:
-            - containerPort: 3001
+        - name: images
+          image: registry.cloud.cbh.kth.se/deploy-dac1887e-42b2-4716-abe1-fd266d22921d/images-wwnr
       
