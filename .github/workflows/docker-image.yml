@@ -7,6 +7,14 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        repository: Wiljam1/fullstack-paint
+        ref: main
+        fetch-depth: 0
+    - name: Fetch Latest Changes
+      run: git fetch --depth=1 origin mai
     - name: Fetch Latest Changes
       run: git fetch --depth=1 origin main
     - name: Login to Docker Hub
