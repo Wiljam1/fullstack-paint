@@ -10,14 +10,11 @@
 services:
   server:
     build:
-      context: images
+      context: .
     environment:
       NODE_ENV: production
-      SPRING_DATASOURCE_URL: jdbc:mysql://vm.cloud.cbh.kth.se:2781/images
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: wiljamniklas
     ports:
-      - "3001:3001"
+      - 3001:3001
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

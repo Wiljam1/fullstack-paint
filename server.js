@@ -5,7 +5,7 @@ const mysql = require('mysql2');
 const cors = require('cors');
 
 const connection = mysql.createConnection({
-    host: process.env.DB_HOST || 'host.docker.internal',        //localhost
+    host: process.env.DB_HOST || 'mysql-service',        //localhost
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || 'wiljamniklas',
     database: process.env.DB_NAME || 'images',

@@ -1,18 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: images
+  name: fullstack-images
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: images
+      app: fullstack-images
   template:
     metadata:
       labels:
-        app: images
+        app: fullstack-images
     spec:
       containers:
-        - name: images
-          image: registry.cloud.cbh.kth.se/deploy-dac1887e-42b2-4716-abe1-fd266d22921d/images-wwnr
-      
+      - name: fullstack-images
+        image: wiljam/fullstack-images:latest
+        ports:
+        - containerPort: 3001
