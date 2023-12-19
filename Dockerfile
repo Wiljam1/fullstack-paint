@@ -1,16 +1,20 @@
-ARG NODE_VERSION=20.9.0
+FROM node:20.9.0-alpine as base
 
-
-FROM node:${NODE_VERSION}-alpine
-ENV NODE_ENV production
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
-USER root
+
+RUN apk add --no-cache --virtual .build-deps \
+    g++ make python3 py3-pip \
+    && npm install --production --ignore-scripts=false --foreground-scripts --verbose sharp \
+    && npm ci \
+    && apk del .build-deps
+
 COPY . .
 
 EXPOSE 3001
+
+# Run the application
 CMD ["node", "server.js"]
 
 #CMD ["npm", "start"]
