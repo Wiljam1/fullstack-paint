@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN apk add --no-cache --virtual .build-deps \
     g++ make python3 py3-pip \
-    && npm install --production --ignore-scripts=false --foreground-scripts --verbose sharp \
+    && npm install --arch=x64 --platform=linuxmusl sharp \
     && npm ci \
     && apk del .build-deps
 
