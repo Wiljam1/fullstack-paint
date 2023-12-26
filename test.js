@@ -1,6 +1,7 @@
 const supertest = require('supertest');
 const { app, startServer, connection } = require('./server.js');
 const requestWithSupertest = supertest(app);
+const path = require('path');
 
 let server;
 beforeAll(() => {
@@ -29,5 +30,16 @@ describe('User Endpoints', () => {
             expect(res.body[0]).toHaveProperty('data');
         }
     });
+
+    it('POST /upload should upload an image', async () => {
+        const testImagePath = path.join(__dirname, './', 'test.png');
+        const res = await requestWithSupertest.post('/upload')
+            .attach('image', testImagePath)
+            .expect(200);
+
+        expect(res.body).toHaveProperty('message', 'Image uploaded and processed successfully!');
+    });
+
+    //TODO: Add more endpoints to test
 });
 
