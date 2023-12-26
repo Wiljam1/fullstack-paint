@@ -15,6 +15,13 @@ const connection = mysql.createConnection({
 const app = express();
 const port = 3001;
 
+function startServer() {
+    const server = app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+    return server;
+}
+
 app.use(express.json());
 app.use(cors());
 app.use(express.static('public'));
@@ -147,6 +154,7 @@ async function saveImageToDatabase(imageBuffer) {
     }
 }
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+module.exports = { app, startServer, connection };
+if (require.main === module) {
+    startServer();
+}

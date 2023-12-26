@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "root",
+    "password": "wiljamniklas",
+    "database": "images",
+    "host": "130.237.83.249",
+    "port": 2788,
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "wiljamniklas",
+    "database": "images",
+    "host": "130.237.83.249",
+    "port": 2788,
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "wiljamniklas",
+    "database": "images",
+    "host": "130.237.83.249",
+    "port": 2788,
+    "dialect": "mysql"
+  }
+}
