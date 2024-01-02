@@ -3,6 +3,8 @@ const multer = require('multer');
 const Jimp = require('jimp');
 const mysql = require('mysql2');
 const cors = require('cors');
+const verifyToken = require('./tokenverification.js');
+
 
 const connection = mysql.createConnection({
     host: 'vm.cloud.cbh.kth.se',
@@ -29,7 +31,7 @@ app.use(express.static('public'));
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-app.post('/upload', upload.single('image'), async (req, res) => {
+app.post('/upload', verifyToken, upload.single('image'), async (req, res) => {
     try {
         const processedImageBuffer = await processImage(req.file.buffer);
         await saveImageToDatabase(processedImageBuffer);
@@ -40,7 +42,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     }
 });
 
-app.post('/saveMergedImage', async (req, res) => {
+app.post('/saveMergedImage', verifyToken, async (req, res) => {
     const { imageData, id } = req.body;
 
     try {
@@ -62,7 +64,7 @@ app.post('/saveMergedImage', async (req, res) => {
     }
 });
 
-app.get('/images', async (req, res) => {
+app.get('/images', verifyToken, async (req, res) => {
     const query = 'SELECT * FROM images.image_data';
 
     try {
@@ -84,7 +86,7 @@ app.get('/images', async (req, res) => {
     }
 });
 
-app.get('/images/:id', async (req, res) => {
+app.get('/images/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
     const query = 'SELECT * FROM images.image_data WHERE id = ?';  // Assuming your ID column is named 'id'
 
