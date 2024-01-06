@@ -24,7 +24,7 @@ function startServer() {
     return server;
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(cors());
 app.use(express.static('public'));
 
